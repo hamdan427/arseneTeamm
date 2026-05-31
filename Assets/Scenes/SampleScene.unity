@@ -359,6 +359,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blinkOverlay: {fileID: 1629827639}
+  blinkDelay: 0.08
+  blinkSpeed: 20
 --- !u!1001 &146555336
 PrefabInstance:
   m_ObjectHideFlags: 0

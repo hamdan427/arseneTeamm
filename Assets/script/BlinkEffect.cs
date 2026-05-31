@@ -1,15 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnitEye;
+using UnityEngine.InputSystem;
 
 public class BlinkEffect : MonoBehaviour
 {
     public Image blinkOverlay;
 
-    // Harus dianggap blink selama beberapa waktu dulu
-    public float blinkDelay = 0.40f;
+    // Delay anti false trigger
+    public float blinkDelay = 0.08f;
 
-    // Kecepatan nutup & buka mata
+    // Speed buka/tutup kelopak
     public float blinkSpeed = 20f;
 
     private Gaze gaze;
@@ -29,7 +30,7 @@ public class BlinkEffect : MonoBehaviour
         if (gaze == null || blinkOverlay == null)
             return;
 
-        // Kalau UnitEye bilang blink
+        // Blink dari UnitEye
         if (gaze.Blinking)
         {
             blinkTimer += Time.deltaTime;
@@ -39,15 +40,19 @@ public class BlinkEffect : MonoBehaviour
             blinkTimer = 0f;
         }
 
-        // Baru trigger kalau blink cukup lama
-        bool realBlink = blinkTimer >= blinkDelay;
+        bool realEyeBlink = blinkTimer >= blinkDelay;
+
+        // Blink dari tombol Space
+        bool keyboardBlink = Keyboard.current != null &&
+                             Keyboard.current.spaceKey.isPressed;
+
+        // Kalau salah satu aktif → blink
+        bool doBlink = realEyeBlink || keyboardBlink;
 
         Color c = blinkOverlay.color;
 
-        // FULL hitam pas blink
-        float targetAlpha = realBlink ? 1f : 0f;
+        float targetAlpha = doBlink ? 1f : 0f;
 
-        // Fade cepet biar natural kayak kelopak mata
         c.a = Mathf.Lerp(c.a, targetAlpha, Time.deltaTime * blinkSpeed);
 
         blinkOverlay.color = c;
