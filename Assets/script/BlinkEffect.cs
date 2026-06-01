@@ -13,11 +13,13 @@ public class BlinkEffect : MonoBehaviour
     // Speed buka/tutup kelopak
     public float blinkSpeed = 20f;
 
-    public Gaze gaze;
-    public float blinkTimer = 0f;
+    private Gaze gaze;
+    private float blinkTimer = 0f;
 
     void Start()
     {
+        gaze = FindObjectOfType<Gaze>();
+
         Color c = blinkOverlay.color;
         c.a = 0f;
         blinkOverlay.color = c;
