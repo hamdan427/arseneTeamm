@@ -12,6 +12,7 @@ public class BlinkEffect : MonoBehaviour
     [Header("References")]
     public Image blinkOverlay;
     public Gaze gaze;
+    public AnomalyManager anomaly;
 
     [Tooltip("Reference to SFXManager for blink sound. Assign in Inspector.")]
     public SFXManager sfxManager;
@@ -25,8 +26,8 @@ public class BlinkEffect : MonoBehaviour
 
     /// <summary>True while the player's eyes are considered closed (Space held or real eye blink).</summary>
     public bool isBlink = false;
+    private float blinkTimer;
 
-    private float blinkTimer = 0f;
     private bool previousBlink = false;
 
     private void Start()
@@ -67,7 +68,10 @@ public class BlinkEffect : MonoBehaviour
 
         // --- Rising edge: play blink SFX once per blink event ---
         if (doBlink && !previousBlink)
+        {
             sfxManager?.PlayBlink();
+            anomaly.CountBlink();
+        }
 
         previousBlink = doBlink;
 
