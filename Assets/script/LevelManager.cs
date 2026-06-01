@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 using TMPro;
 
 public class LevelManager : MonoBehaviour
@@ -8,7 +9,7 @@ public class LevelManager : MonoBehaviour
     public AnomalyManager anomaly;
     public CameraRotateSmooth cam;
     public float blinkTimer;
-    public int Clock = 0;
+    private int sceneIndex = 1;
     void Start()
     {
         
@@ -21,12 +22,19 @@ public class LevelManager : MonoBehaviour
             //Debug.Log(gaze.Blinking+" | "+blinkTimer);
             if (blinkTimer >= 3f)
             {
-                if (anomaly.hasAnomaly && (cam.CurrentPosition == 0 || cam.CurrentPosition == 2))
-                    Clock++;
-                else if (!anomaly.hasAnomaly && cam.CurrentPosition == 2) Clock++;
-                else Clock = 0;
+                if (!anomaly.hasAnomaly && (cam.CurrentPosition == 0 || cam.CurrentPosition == 2))
+                    StartCoroutine(SwitchScene());
+                else if (anomaly.hasAnomaly && cam.CurrentPosition == 1) StartCoroutine(SwitchScene());
+                else SceneManager.LoadScene(1);
             }
         }
         else blinkTimer = 0f;
+    }
+
+    private IEnumerator SwitchScene()
+    {
+        sceneIndex++;
+        SceneManager.LoadScene(sceneIndex);
+        yield return new WaitForSeconds(1f);
     }
 }
